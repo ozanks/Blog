@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Admin paneli</h2>
+
+@Html.ActionLink("Kategori İşlemleri", "Index", "Categories", null, new { @class = "btn btn-info" })
+@Html.ActionLink("Yazar İşlemleri", "Index", "Authors", null, new { @class = "btn btn-info" })
+@Html.ActionLink("Makale İşlemleri", "Index", "Posts", null, new { @class = "btn btn-info" })
+

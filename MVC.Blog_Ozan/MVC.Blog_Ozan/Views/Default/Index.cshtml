@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string catName = "";
+    if (ViewContext.RouteData.Values["category"] != null)
+    {
+        catName = ViewContext.RouteData.Values["category"].ToString();
+    }
+}
+
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('@Url.Content("~/Images/home-bg.jpg")')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    @*<h1>@ViewBag.PageTitle</h1>*@
+
+                    @if (ViewContext.RouteData.Values["category"] == null)
+                    {
+                        <h1>Home Page</h1>
+                    }
+                    else
+                    {
+                        <h1>@Model.FirstOrDefault().Category.Name</h1>
+                    }
+                    <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div id="yazilar" class="col-lg-8 col-md-10 mx-auto">
+            @foreach (var item in Model)
+            {
+                <div class="post-preview">
+                    <a href="@Url.Action("Details","Default",new { id=item.Id })">
+                        <h2 class="post-title">
+                            @item.Title
+                        </h2>
+                        <h3 class="post-subtitle">
+                            @item.Summary
+                        </h3>
+                    </a>
+                    <p class="post-meta">
+                        Posted by
+                        <a href="#">@item.Author.FirstName @item.Author.LastName</a>
+                        on @item.DateOfCreate.ToString("dd-MMMM-yyyy")
+                    </p>
+                </div>
+                <hr>
+            }
+            <!-- Pager -->
+            <div class="clearfix">
+                <a class="btn btn-primary" style="width:100%" role="button" id="more">Older Posts</a>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var sayi = 2;
+            $('#more').click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetMore","Default")',
+                    type: 'get',
+                    dataType: 'json',
+                    data: { "toSkip": sayi, "category": '@catName' },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+
+                            $('#more').before("<p>" + data[i] + "<p/>");
+                        }
+                        sayi += 2;
+                    },
+                    error: function () {
+                        alert("hata");
+                    }
+                });
+
+            });
+
+
+        });
+
+    </script>
+
+}
+
